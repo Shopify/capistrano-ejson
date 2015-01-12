@@ -26,7 +26,7 @@ Require in `Capfile` to use the default task:
 require 'capistrano/ejson'
 ```
 
-The task `ejson:upload_config_file` will run after `deploy:updated`.
+The task `ejson:decrypt` will run after `deploy:updated`.
 
 By default the file `config/secrets.ejson` will be decrypted to `config/secrets.json`. You can change this behavior by specifying the following config variables:
 
