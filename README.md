@@ -35,6 +35,8 @@ set :ejson_file, "config/secrets.ejson"
 set :ejson_output_file, "config/secrets.json"
 ```
 
+By default `capistrano-ejson` decrypts the secrets file from the machine that does the deploy and then uploads the resulting config to the servers. You can set `:ejson_deploy_mode` to `:remote` to perform the decryption remotely, which will run something like `ejson decrypt -o config/secrets.json config/secrets.ejson` on the remote hosts. If you need to use `sudo` or `bundle exec`, you should use the [SSHKit command map](https://github.com/capistrano/sshkit#the-command-map).
+
 ## Contributing
 
 1. Fork it
