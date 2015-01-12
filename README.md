@@ -26,12 +26,13 @@ Require in `Capfile` to use the default task:
 require 'capistrano/ejson'
 ```
 
-The task `ejson:upload_config_files` will run after `deploy:updated`.
+The task `ejson:upload_config_file` will run after `deploy:updated`.
 
-By default any file ending in `.ejson` will be decrypted and uploaded. You can set which files to upload manually by doing
+By default the file `config/secrets.ejson` will be decrypted to `config/secrets.json`. You can change this behavior by specifying the following config variables:
 
 ```ruby
-set :ejson_files, %w{config/keys.ejson}
+set :ejson_file, "config/secrets.ejson"
+set :ejson_output_file, "config/secrets.json"
 ```
 
 ## Contributing
