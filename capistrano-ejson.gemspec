@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "capistrano-ejson"
-  spec.version       = "0.0.1"
+  spec.version       = "0.0.2"
   spec.authors       = ["Bouke van der Bijl"]
   spec.email         = ["bouke@shopify.com"]
   spec.description = spec.summary = %q{Automatic EJSON decryption for Capistrano}
