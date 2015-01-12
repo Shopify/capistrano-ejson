@@ -1,3 +1,5 @@
+require 'open3'
+
 namespace :ejson do
   desc "Decrypt and upload ejson config files"
 
