@@ -13,7 +13,7 @@ namespace :ejson do
       Open3.popen3('bundle', 'exec', 'ejson', 'decrypt', ejson_file) do |stdin, stdout, stderr, wait_thr|
         if wait_thr.value == 0
           contents = stdout.read
-          on roles(:all) do
+          on release_roles(:all) do
             upload! StringIO.new(contents), File.join(release_path, ejson_output_file)
           end
         else
@@ -21,7 +21,7 @@ namespace :ejson do
         end
       end
     when :remote
-      on roles(:all) do
+      on release_roles(:all) do
         within release_path do
           execute :ejson, :decrypt, "-o", ejson_output_file, ejson_file
         end
