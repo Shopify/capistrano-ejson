@@ -1,0 +1,28 @@
+namespace :ejson do
+  desc "Decrypt and upload ejson config files"
+
+  task :upload_config_files do
+    fetch(:ejson_files).each do |ejson_file|
+      json_file = ejson_file.sub(/\.ejson\z/, '.json')
+
+      Open3.popen3('bundle', 'exec', 'ejson', 'decrypt', ejson_file) do |stdin, stdout, stderr, wait_thr|
+        if wait_thr.value == 0
+          contents = stdout.read
+          on roles(:all) do
+            upload! StringIO.new(contents), File.join(release_path, json_file)
+          end
+        else
+          raise "Failed to decrypt file #{stderr.read}"
+        end
+      end
+    end
+  end
+
+  after 'deploy:updated', 'ejson:upload_config_files'
+end
+
+namespace :load do
+  task :defaults do
+    set :ejson_files, -> { Dir["**/*.ejson"] }
+  end
+end
