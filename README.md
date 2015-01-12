@@ -4,10 +4,10 @@ This gem makes it easy to use [ejson](https://github.com/Shopify/ejson) in appli
 
 ## Installation
 
-Add this lines to your application's Gemfile:
+Add this line to your application's Gemfile:
 
 ```ruby
-gem 'capistrano-ejson', '~> 0.0.1'
+gem 'capistrano-ejson', '~> 0.1.0'
 ```
 
 And then execute:
