@@ -6,16 +6,28 @@ namespace :ejson do
   task :upload_config_file do
     ejson_file = fetch(:ejson_file)
     ejson_output_file = fetch(:ejson_output_file)
+    ejson_deploy_mode = fetch(:ejson_deploy_mode)
 
-    Open3.popen3('bundle', 'exec', 'ejson', 'decrypt', ejson_file) do |stdin, stdout, stderr, wait_thr|
-      if wait_thr.value == 0
-        contents = stdout.read
-        on roles(:all) do
-          upload! StringIO.new(contents), File.join(release_path, ejson_output_file)
+    case ejson_deploy_mode
+    when :local
+      Open3.popen3('bundle', 'exec', 'ejson', 'decrypt', ejson_file) do |stdin, stdout, stderr, wait_thr|
+        if wait_thr.value == 0
+          contents = stdout.read
+          on roles(:all) do
+            upload! StringIO.new(contents), File.join(release_path, ejson_output_file)
+          end
+        else
+          raise "Failed to decrypt file #{stderr.read}"
         end
-      else
-        raise "Failed to decrypt file #{stderr.read}"
       end
+    when :remote
+      on roles(:all) do
+        within release_path do
+          execute :ejson, :decrypt, "-o", ejson_output_file, ejson_file
+        end
+      end
+    else
+      raise "Unknown ejson_deploy_mode: #{ejson_deploy_mode.inspect}"
     end
   end
 
@@ -26,5 +38,6 @@ namespace :load do
   task :defaults do
     set :ejson_file, 'config/secrets.ejson'
     set :ejson_output_file, 'config/secrets.json'
+    set :ejson_deploy_mode, :local
   end
 end
