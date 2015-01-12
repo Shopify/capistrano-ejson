@@ -3,7 +3,7 @@ require 'open3'
 namespace :ejson do
   desc "Decrypt and upload ejson config files"
 
-  task :upload_config_file do
+  task :decrypt do
     ejson_file = fetch(:ejson_file)
     ejson_output_file = fetch(:ejson_output_file)
     ejson_deploy_mode = fetch(:ejson_deploy_mode)
@@ -31,7 +31,7 @@ namespace :ejson do
     end
   end
 
-  after 'deploy:updated', 'ejson:upload_config_file'
+  after 'deploy:updated', 'ejson:decrypt'
 end
 
 namespace :load do
