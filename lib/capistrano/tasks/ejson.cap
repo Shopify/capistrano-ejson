@@ -11,15 +11,13 @@ namespace :ejson do
 
     case ejson_deploy_mode
     when :local
-      Open3.popen3('bundle', 'exec', 'ejson', 'decrypt', ejson_file) do |stdin, stdout, stderr, wait_thr|
-        if wait_thr.value == 0
-          contents = stdout.read
-          on release_roles(:all) do
-            upload! StringIO.new(contents), File.join(release_path, ejson_output_file), mode: ejson_file_mode
-          end
-        else
-          raise "Failed to decrypt file #{stderr.read}"
+      out, err, status = Open3.capture3("bundle exec ejson decrypt #{ejson_file}")
+      if status.exitstatus == 0
+        on release_roles(:all) do
+          upload! StringIO.new(out), File.join(release_path, ejson_output_file), mode: ejson_file_mode
         end
+      else
+        raise "Failed to decrypt file #{err}"
       end
     when :remote
       on release_roles(:all) do
