@@ -11,7 +11,7 @@ namespace :ejson do
 
     case ejson_deploy_mode
     when :local
-      out, err, status = Open3.capture3("bundle exec ejson decrypt #{ejson_file}")
+      out, err, status = Open3.capture3('bundle', 'exec', 'ejson', 'decrypt', ejson_file)
       if status.exitstatus == 0
         on release_roles(:all) do
           upload! StringIO.new(out), File.join(release_path, ejson_output_file), mode: ejson_file_mode
