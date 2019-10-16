@@ -40,6 +40,6 @@ namespace :load do
     set :ejson_file_mode, nil
     set :ejson_output_file, 'config/secrets.json'
     set :ejson_deploy_mode, :local
-    set :ejson_keydir, 'opt/ejson/keys'
+    set :ejson_keydir, '/opt/ejson/keys'
   end
 end
