@@ -8,10 +8,11 @@ namespace :ejson do
     ejson_file_mode = fetch(:ejson_file_mode)
     ejson_output_file = fetch(:ejson_output_file)
     ejson_deploy_mode = fetch(:ejson_deploy_mode)
+    ejson_keydir = fetch(:ejson_keydir)
 
     case ejson_deploy_mode
     when :local
-      out, err, status = Open3.capture3('bundle', 'exec', 'ejson', 'decrypt', ejson_file)
+      out, err, status = Open3.capture3('bundle', 'exec', 'ejson', '--keydir', ejson_keydir, 'decrypt', ejson_file)
       if status.exitstatus == 0
         on release_roles(:all) do
           upload! StringIO.new(out), File.join(release_path, ejson_output_file), mode: ejson_file_mode
@@ -22,7 +23,7 @@ namespace :ejson do
     when :remote
       on release_roles(:all) do
         within release_path do
-          execute :ejson, :decrypt, "-o", ejson_output_file, ejson_file
+          execute :ejson, "--keydir", ejson_keydir, :decrypt, "-o", ejson_output_file, ejson_file
         end
       end
     else
@@ -39,5 +40,6 @@ namespace :load do
     set :ejson_file_mode, nil
     set :ejson_output_file, 'config/secrets.json'
     set :ejson_deploy_mode, :local
+    set :ejson_keydir, '/opt/ejson/keys'
   end
 end
